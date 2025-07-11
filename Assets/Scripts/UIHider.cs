@@ -18,28 +18,45 @@ public class UIHider : MonoBehaviour
     private void Awake()
     {
         _image = GetComponent<Image>();
-    }
 
-    private void Update()
-    {
-        Work();
-    }
-
-    private void Work()
-    {
-        if (_insideChecker.IsPlayerInside)
-            ChangeOpacityTowards(_maxOpacity);
-        else
-            ChangeOpacityTowards(_minOpacity);
-
-        Color imageColor = _image.color;
-        imageColor.a = _opacity;
-
-        _image.color = imageColor;
+        _insideChecker.PlayerEntered += StartRaiseOpacity;
+        _insideChecker.PlayerLeft += StartLowerOpacity;
     }
 
     private void ChangeOpacityTowards(float targetVolume)
     {
         _opacity = Mathf.MoveTowards(_opacity, targetVolume, _opacityChangeSpeed * Time.deltaTime);
+
+        Color imageColor = _image.color;
+        imageColor.a = _opacity;
+        _image.color = imageColor;
+    }
+
+    private void StartRaiseOpacity() { 
+        StopAllCoroutines();
+        StartCoroutine(RaiseOpacity());
+    } 
+
+    private void StartLowerOpacity() {
+        StopAllCoroutines();
+        StartCoroutine(LowerOpacity());
+    } 
+
+    private IEnumerator RaiseOpacity()
+    {
+        while (_opacity < _maxOpacity)
+        {
+            ChangeOpacityTowards(_maxOpacity);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private IEnumerator LowerOpacity()
+    {
+        while (_opacity > _minOpacity)
+        {
+            ChangeOpacityTowards(_minOpacity);
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

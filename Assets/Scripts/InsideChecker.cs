@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,16 +6,18 @@ using UnityEngine;
 public class InsideChecker : MonoBehaviour
 {
     public bool IsPlayerInside { get; private set; }
+    public event Action PlayerEntered;
+    public event Action PlayerLeft;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out PlayerMover _))
-            IsPlayerInside = true;
+            PlayerEntered?.Invoke();
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.TryGetComponent(out PlayerMover _))
-            IsPlayerInside = false;
+            PlayerLeft?.Invoke();
     }
 }

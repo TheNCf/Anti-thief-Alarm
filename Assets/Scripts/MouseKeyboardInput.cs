@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class MouseKeyboardInput : MonoBehaviour
 {
     [SerializeField] private string _horizontalAxis;
     [SerializeField] private string _verticalAxis;

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -17,30 +16,49 @@ public class AlarmStarter : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-    }
-
-    private void Update()
-    {
-        Work();
-    }
-
-    private void Work()
-    {
-        if (_volume <= 0 && _audioSource.isPlaying == true)
-            _audioSource.Stop();
-        if (_volume > 0 && _audioSource.isPlaying == false)
-            _audioSource.Play();
-
-        if (_insideChecker.IsPlayerInside)
-            ChangeVolumeTowards(_maxVolume);
-        else
-            ChangeVolumeTowards(_minVolume);
-
-        _audioSource.volume = _volume;
+        _insideChecker.PlayerEntered += StartRaiseVolume;
+        _insideChecker.PlayerLeft += StartLowerVolume;
     }
 
     private void ChangeVolumeTowards(float targetVolume)
     {
         _volume = Mathf.MoveTowards(_volume, targetVolume, _volumeChangeSpeed * Time.deltaTime);
+        _audioSource.volume = _volume;
+    }
+
+    private void StartRaiseVolume()
+    {
+        StopAllCoroutines();
+        StartCoroutine(RaiseVolume());
+    }
+
+    private void StartLowerVolume() 
+    {
+        StopAllCoroutines();
+        StartCoroutine(LowerVolume()); 
+    }
+
+    private IEnumerator RaiseVolume()
+    {
+        if (_audioSource.isPlaying == false)
+            _audioSource.Play();
+
+        while (_volume < _maxVolume)
+        {
+            ChangeVolumeTowards(_maxVolume);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private IEnumerator LowerVolume()
+    {
+        while (_volume > 0)
+        {
+            ChangeVolumeTowards(_minVolume);
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (_audioSource.isPlaying == true)
+            _audioSource.Stop();
     }
 }

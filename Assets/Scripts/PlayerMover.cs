@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(InputManager))]
+[RequireComponent(typeof(MouseKeyboardInput))]
 public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private float _movementSpeed = 6.0f;
@@ -11,7 +11,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private Transform _groundPoint;
 
     private CharacterController _characterController;
-    private InputManager _inputManager;
+    private MouseKeyboardInput _inputManager;
 
     private Vector3 _velocity;
     private Vector3 _gravity = new Vector3(0.0f, -9.81f, 0.0f);
@@ -22,7 +22,7 @@ public class PlayerMover : MonoBehaviour
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _inputManager = GetComponent<InputManager>();
+        _inputManager = GetComponent<MouseKeyboardInput>();
 
         _inputManager.JumpButtonPressed += RegisterJumpInput;
     }

@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(InputManager))]
+[RequireComponent(typeof(MouseKeyboardInput))]
 public class PlayerRotator : MonoBehaviour
 {
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private float _sensivity = 5.0f;
     [SerializeField] private float _verticalAngleMaxAbsValue = 89.0f;
 
-    private InputManager _inputManager;
+    private MouseKeyboardInput _inputManager;
 
     private float _currentVerticalAngle = 0;
 
     private void Awake()
     {
-        _inputManager = GetComponent<InputManager>();
+        _inputManager = GetComponent<MouseKeyboardInput>();
 
         Cursor.lockState = CursorLockMode.Locked;
     }
